@@ -1,0 +1,25 @@
+.carousel .carousel-inner {
+    height: 500px;
+    transition: 6s ease-in-out left;
+}
+
+.carousel-caption {
+    top: 50%;
+    transform: translateY(-100%);
+    color: rgb(1, 9, 44);
+}
+
+.page-footer .container-fluid{
+    background-color: rgba(13, 148, 134, 0.815);
+}
+
+.page-footer .footer-copyright{
+    background-color: rgb(24, 138, 124);
+}
+
+.jumbotron {
+    background-color: rgb(200, 205, 207);
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 20px;
+}
