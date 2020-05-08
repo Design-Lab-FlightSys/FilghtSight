@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block log_buttons %}
+<form class="pull-right">
+  <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#logoutModal">
+    Log Out
+  </button>
+
+  <!-- Modal for Logout -->
+  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="logoutModalLabel">Log Out</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Do you really want to logout?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <a class="btn btn-primary" href="../logout">Log Out</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock %}
+
+{% block body %}
+<div class="jumbotron">
+  <h1 class="display-4">Welcome, {{user.name}}</h1>
+  <p class="lead">Welcome to your dashboard, from here you can control your activities, booking flights, viewing your
+    booking and managing your profile with absolute ease!</p>
+  <hr class="my-4">
+  <p>
+    <div class="container bootstrap snippet">
+    
+      <div class="row">
+      	<div class="col-sm-3">
+          <!--left col-->
+
+
+          <div class="text-center">
+          	<img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="avatar img-circle img-thumbnail"
+              alt="avatar">
+            <h6>Upload a different photo...</h6>
+            <input type="file" class="text-center center-block file-upload">
+          </div>
+        </div><!--/col-3-->
+
+        <div class="col-sm-9">
+
+            <div  style="float: left;">
+              <h4>Full name</h4>
+              {{user.name}}
+            </div>
+            <div  style="float: right; padding-right: 200px;">
+              <h4>Username</h4>
+              {{user.username}}
+            </div>
+
+            <div style="clear:both;">&nbsp;</div>
+
+            <div  style="float: left;">
+              <h4>Email ID</h4>
+              {{user.email}}
+            </div>
+            <div  style="float: right; padding-right: 200px;">
+              <h4>Mobile No.</h4>
+              
+            </div>
+
+        </div><!--/col-9-->
+      </div><!--/row-->
+    </div>
+  </p>
+</div>
+<div class="d-flex justify-content-around">
+  <a class="btn btn-primary btn-lg" href="#" role="button">Book a Flight!</a>
+  <a class="btn btn-primary btn-lg" href="#" role="button">View your Booked Flights</a>
+  <a class="btn btn-primary btn-lg" href="chpswd/{{user.id}}" role="button">Manage Account</a>
+</div>
+{% endblock %}

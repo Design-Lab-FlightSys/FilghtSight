@@ -53,8 +53,7 @@
 <html lang="en">
 
 <head>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet"
-        id="bootstrap-css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <link type="text/css" rel="stylesheet" href="../static/css/style.css">
 
     <title>FlightSite</title>
@@ -86,7 +85,9 @@
                     {% with messages = get_flashed_messages() %}
                         {% if messages %}
                             {% for m in messages %}
-                                {{ m }}
+                                <div class="alert alert-success" role="alert">
+                                    {{ m }}
+                                </div>
                             {% endfor %}
                         {% endif %}
                     {% endwith %}
@@ -101,7 +102,7 @@
                     <a href="">Forgot password?</a>
                 </form>
                 {% if error %}
-                    <p class="error" style="color:red;"><strong>Error:</strong> {{ error }}
+                    <p class="error" style="color:red;"><strong>Error:</strong> {{ error }} </p>
                 {% endif %}
             </div>
             <div class="register-show">

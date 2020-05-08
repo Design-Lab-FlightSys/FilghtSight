@@ -62,7 +62,7 @@
     <ul>
         {% for field, errors in form.errors.items() %}
             <div class="alert alert-error">
-                <li style="font-size: small; color:red;">
+                <li style="font-size: small; color:darkred;">
                     {{ form[field].label }}: {{ ', '.join(errors) }}
                 </li>
             </div>
