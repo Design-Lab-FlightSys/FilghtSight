@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
 {% block head %}
-  <link type="text/css" rel="stylesheet" href="../static/css/style.css">
+  <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <title>FlightSite</title>
-  <link rel='icon' href='../static/img/FS.png' type="image/x-icon">
+  <link rel='icon' href="{{ url_for('static', filename='img/FS.png') }}" type="image/x-icon">
 {% endblock %}
 
 {% block log_buttons %}
 <form class="pull-right">
-  <a class="btn btn-outline-info" href="javascript:history.back()">Dashboard</a>
+  <a class="btn btn-outline-info" href="{{ url_for('admin_dashboard', eid=eid) }}">Dashboard</a>
   &nbsp;
   <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#logoutModal">
     Log Out
@@ -30,7 +30,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <a class="btn btn-primary" href="../logout">Log Out</a>
+          <a class="btn btn-primary" href="{{ url_for('ulogout') }}">Log Out</a>
         </div>
       </div>
     </div>
@@ -41,29 +41,32 @@
 {% block body %}
 
 
-  <form method="POST" action="/chpswd/{{id}}" style="margin-right: 20%; margin-left: 20%; padding-top: 20px">
+  <form method="POST" action="/admin_dashboard/{{eid}}/add_staff" style="margin-right: 20%; margin-left: 20%; padding-top: 20px">
       <!-- <input type="text" placeholder="Email">
       <input type="password" placeholder="Password"> -->
-      {{ form.hidden_tag() }}
-      <h2 style="text-align: center;">Change Password</h2>
-      <div class="form-group">
-        <label for="currentp">Current Password</label>
-        {{ form.oldp(class_="form-control") }}
-      </div>
-      <div class="form-group">
-        <label for="newp">New Password</label>
-        {{ form.newp(class_="form-control") }}
-        <small class="form-text text-muted">Password should be atleast 8 character in length. Keep numeric and special characters to make it strong</small>
-      </div>
-      <div class="form-group">
-        <label for="confnewp">Confirm New Password</label>
-        {{ form.conf_newp(class_="form-control") }} <br> <br>
-        <input type="submit" value="Change Password" class="btn btn-info">
-      </div>              
+        
+        {{ form.hidden_tag() }}
+        <h2 style="text-align: center;">Add your new Employee</h2>
+        <div class="form-group">
+          <label for="empid">Employee ID</label>
+          {{ form.empid(class_="form-control") }}
+        </div>
+        <div class="form-group">
+          <label for="name">Name</label>
+          {{ form.name(class_="form-control") }}
+        </div>
+        <div class="form-group">
+          <label for="uname">Username</label>
+          {{ form.username(class_="form-control") }}
+          <small class="form-text text-muted">{{usernameCheck}}</small>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          {{ form.email(class_="form-control") }} <br> <br>
+          <input type="submit" value="Submit Details" class="btn btn-info">
+        </div>              
   </form>
-  {% if error %}
-      <p class="error" style="color:red; text-align: center;"><strong>Error:</strong> {{ error }} </p>
-  {% endif %}
+
   <ul>
       {% for field, errors in form.errors.items() %}
         <div class="alert alert-error">

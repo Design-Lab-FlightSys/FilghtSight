@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <title>FlightSite</title>
+  <link rel='icon' href="{{ url_for('static', filename='img/FS.png') }}" type="image/x-icon">
+{% endblock %}
+
+{% block log_buttons %}
+<form class="pull-right">
+  <a class="btn btn-outline-info" href="{{ url_for('staff_dashboard', empid=empid) }}">Dashboard</a>
+  &nbsp;
+  <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#logoutModal">
+    Log Out
+  </button>
+
+  <!-- Modal for Logout -->
+  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="logoutModalLabel">Log Out</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Do you really want to logout?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <a class="btn btn-primary" href="{{ url_for('ulogout') }}">Log Out</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock %}
+
+{% block body %}
+
+
+  <form method="POST" action="/staff_dashboard/{{empid}}/make_announcements" style="margin-right: 20%; margin-left: 20%; padding-top: 20px">
+      <!-- <input type="text" placeholder="Email">
+      <input type="password" placeholder="Password"> -->
+      {{ form.hidden_tag() }}
+      <h2 style="text-align: center;">Manage Announcements</h2>
+      <div class="form-group">
+        <label for="currentp">Make announcement</label>
+        {{ form.body(class_="form-control") }}
+        <small class="form-text text-muted">Announcements should always be complete and concise</small>
+        <input type="submit" value="Publish" class="btn btn-info">
+      </div>              
+  </form>
+  <ul>
+      {% for field, errors in form.errors.items() %}
+        <div class="alert alert-error">
+            <li style="font-size: medium; color:darkred;">
+              {{ form[field].label }}: {{ ', '.join(errors) }}
+            </li>
+        </div>
+      {% endfor %}
+  </ul>
+  <p>
+    <h2 style="text-align: center;">Active Announcements</h2>
+      <div  style="margin-left: 10%; margin-right: 10%;">
+        <table class="table">
+          <thead class="thead-dark">
+            <tr>
+              
+              <th scope="col">Id</th>
+              <th scope="col">Announcement</th>
+              <th scope="col">Date Posted</th>
+              <th scope="col">Posted By</th>
+              <th scope="col">Delete Announcement</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for s in announcements %}  
+              <tr>
+                <th scope="row">{{s.id}}</th>
+                <td>{{s.body}}</td>
+                <td>{{s.datePosted}}(utc)</td>
+                <td>{{s.postedBy}}</td>
+                <td><a class="btn btn-danger" href="{{ url_for('delete_ann', empid=empid, id=s.id) }}">Delete</a></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+  </p>
+            
+{% endblock %}

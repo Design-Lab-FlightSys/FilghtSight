@@ -31,15 +31,26 @@
 {% endblock %}
 
 {% block body %}
+<p>
+  {% with messages = get_flashed_messages() %}
+      {% if messages %}
+          {% for m in messages %}
+              <div class="alert alert-success" role="alert" style="margin-left: 10%; margin-right: 10%;">
+                  {{ m }}
+              </div>
+          {% endfor %}
+      {% endif %}
+  {% endwith %}
+</p>
 <div class="jumbotron">
   <h1 class="display-4">Welcome, {{user.name}}(Admin)</h1>
   <p class="lead">Welcome Admin, here you can manage your employees and maintain your system at your ease!</p>
   <hr class="my-4">
 </div>
   <div class="d-flex justify-content-around">
-    <a class="btn btn-primary btn-lg" href="#" role="button">Add Employee</a>
-    <a class="btn btn-primary btn-lg" href="#" role="button">Remove Employee</a>
-    <a class="btn btn-primary btn-lg" href="chpswd/{{user.eid}}" role="button">Change Password</a>
+    <a class="btn btn-primary btn-lg" href="/admin_dashboard/{{user.eid}}/add_staff" role="button">Add Employee</a>
+    <a class="btn btn-primary btn-lg" href="{{ url_for('view_staff', eid=user.eid) }}" role="button">Manage Employee</a>
+    <a class="btn btn-primary btn-lg" href="../chpswd/{{user.eid}}" role="button">Change Password</a>
   </div>  
-  </p>
+
 {% endblock %}

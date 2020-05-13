@@ -31,6 +31,17 @@
 {% endblock %}
 
 {% block body %}
+<p>
+  {% with messages = get_flashed_messages() %}
+      {% if messages %}
+          {% for m in messages %}
+              <div class="alert alert-success" role="alert" style="margin-left: 10%; margin-right: 10%;">
+                  {{ m }}
+              </div>
+          {% endfor %}
+      {% endif %}
+  {% endwith %}
+</p>
 <div class="jumbotron">
   <h1 class="display-4">Welcome, {{user.name}}</h1>
   <p class="lead">Welcome to your dashboard, from here you can control your activities, booking flights, viewing your
@@ -79,9 +90,28 @@
     </div>
   </p>
 </div>
+<div style="margin-left: 10%; margin-right: 10%;" class="ann_box">
+  <nav id="ann_bar" class="navbar navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Announcements</a>
+  </nav>
+  <div data-spy="scroll" data-target="#ann_bar" data-offset="0" class="scrollspy">
+      <marquee direction = "up" onmouseover="this.stop()" onmouseout="this.start()">  
+        <p>
+        {% for a in announcements %}
+          <p style="color: green;">
+            {{a.body}}
+            <br>
+            <small style="color: teal"><i>{{a.datePosted.day}}/{{a.datePosted.month}}/{{a.datePosted.year}}   {{(a.datePosted.hour+5)%24}}:{{(a.datePosted.minute+30)%60}}(IST)</i></small>
+          </p>
+        {% endfor %}
+        </p>
+      </marquee>
+  </div>
+</div>
+<br> <br> <br>
 <div class="d-flex justify-content-around">
   <a class="btn btn-primary btn-lg" href="#" role="button">Book a Flight!</a>
   <a class="btn btn-primary btn-lg" href="#" role="button">View your Booked Flights</a>
-  <a class="btn btn-primary btn-lg" href="chpswd/{{user.id}}" role="button">Manage Account</a>
+  <a class="btn btn-primary btn-lg" href="../chpswd/{{user.id}}" role="button">Manage Account</a>
 </div>
 {% endblock %}

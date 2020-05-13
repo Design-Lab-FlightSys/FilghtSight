@@ -23,3 +23,21 @@
     margin-right: 20px;
     margin-top: 20px;
 }
+
+.page-footer a{
+    color: darkblue;
+}
+
+.page-footer a:hover{
+    color: white;
+}
+
+.scrollspy{
+    position: relative;
+    height: 200px;
+    margin-top: .5rem;
+    overflow: auto;
+        overflow-x: auto;
+        overflow-y: auto;
+}
+
