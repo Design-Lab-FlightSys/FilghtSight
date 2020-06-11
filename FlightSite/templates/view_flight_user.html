@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <title>FlightSite</title>
+  <link rel='icon' href="{{ url_for('static', filename='img/FS.png') }}" type="image/x-icon">
+{% endblock %}
+
+{% block log_buttons %}
+<form class="pull-right">
+  <a class="btn btn-outline-info" href="{{ url_for('dashboard', id=id) }}">Dashboard</a>
+  &nbsp;
+  <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#logoutModal">
+    Log Out
+  </button>
+
+  <!-- Modal for Logout -->
+  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="logoutModalLabel">Log Out</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Do you really want to logout?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <a class="btn btn-primary" href="{{ url_for('logout') }}">Log Out</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock %}
+
+{% block body %}
+
+<p>
+  <form method="POST" action="/dashboard/{{id}}/view_flight_user" style="margin-right: 20%; margin-left: 20%; padding-top: 20px">
+      <!-- <input type="text" placeholder="Email">
+      <input type="password" placeholder="Password"> -->
+      {{ form.hidden_tag() }}
+      <h2 style="text-align: center;">Search Flights</h2>
+      <small class="form-text text-muted">Filter by any of the below attributes</small>
+      <div class="form-group">
+        <label for="currentp">Flight id</label>
+        {{ form.fid(class_="form-control") }}
+      </div>
+      <div class="form-group">
+        <label for="currentp">Travel Date</label>
+        {{ form.tdate(class_="form-control") }}
+      </div>
+      <div class="form-group">
+        <label for="currentp">Source City</label>
+        {{ form.src(class_="form-control") }}
+      </div>
+      <div class="form-group">
+        <label for="currentp">Destination City</label>
+        {{ form.dest(class_="form-control") }}
+        <br>
+        <input type="submit" value="Search" class="btn btn-info">
+      </div>              
+  </form>
+  <ul>
+      {% for field, errors in form.errors.items() %}
+        <div class="alert alert-error">
+            <li style="font-size: medium; color:darkred;">
+              {{ form[field].label }}: {{ ', '.join(errors) }}
+            </li>
+        </div>
+      {% endfor %}
+  </ul>
+</p>
+
+<p>
+  <h2 style="text-align: center;">Available Flights</h2>
+    <div  style="margin-left: 5%; margin-right: 5%;">
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            
+            <th scope="col">Flight Id</th>
+            <th scope="col">Airline</th>
+            <th scope="col">Source</th>
+            <th scope="col">Destination</th>
+            <th scope="col">Arrival Date & Time</th>
+            <th scope="col">Destination Date & Time</th>
+            <th scope="col">Local Time Zone</th>
+            <th scope="col">Economy Class Price</th>
+            <th scope="col">Business Class Price</th>
+            <th scope="col">Total Seats Available</th>
+            <th scope="col">Book Flight</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for f in flights %}  
+            <tr>
+              <th scope="row">{{f.fid}}</th>
+              <td>{{f.airline}}</td>
+              <td>{{f.src}}</td>
+              <td>{{f.dest}}</td>
+              <td>{{f.arrtime}}</td>
+              <td>{{f.deptime}}</td>
+              <td>{{f.tzone}}(UTC)</td>
+              <td>Rs. {{f.eprice}}/-</td>
+              {% if f.bprice %}
+              <td>Rs. {{f.bprice}}/-</td>
+              {% else %}
+              <td>NA</td>
+              {% endif %}
+              <td>{{f.seats}}</td>
+              <td><a class="btn btn-success" href="#">Book</a></td>
+            </tr>
+          {% endfor %}
+      </table>
+    </div>
+</p>
+            
+{% endblock %}

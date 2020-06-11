@@ -22,7 +22,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <a class="btn btn-primary" href="../logout">Log Out</a>
+          <a class="btn btn-primary" href="{{ url_for('logout') }}">Log Out</a>
         </div>
       </div>
     </div>
@@ -110,7 +110,7 @@
 </div>
 <br> <br> <br>
 <div class="d-flex justify-content-around">
-  <a class="btn btn-primary btn-lg" href="#" role="button">Book a Flight!</a>
+  <a class="btn btn-primary btn-lg" href="{{ url_for('view_flight_user', id=user.id) }}" role="button">Book a Flight!</a>
   <a class="btn btn-primary btn-lg" href="#" role="button">View your Booked Flights</a>
   <a class="btn btn-primary btn-lg" href="../chpswd/{{user.id}}" role="button">Manage Account</a>
 </div>

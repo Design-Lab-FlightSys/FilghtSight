@@ -51,8 +51,8 @@
   </p>
 </div>
 <div class="d-flex justify-content-around">
-    <a class="btn btn-primary btn-lg" href="#" role="button">Add Flight</a>
-    <a class="btn btn-primary btn-lg" href="#" role="button">Manage Flights</a>
+    <a class="btn btn-primary btn-lg" href="{{ url_for('add_flights', empid=user.empid) }}" role="button">Add Flight</a>
+    <a class="btn btn-primary btn-lg" href="{{ url_for('view_flight', empid=user.empid) }}" role="button">Manage Flights</a>
     <a class="btn btn-primary btn-lg" href="{{ url_for('make_announcements', empid=user.empid) }}" role="button">Make Announcements</a>
     <a class="btn btn-primary btn-lg" href="../chpswd/{{user.empid}}" role="button">Change Password</a>
 </div>

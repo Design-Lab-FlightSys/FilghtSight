@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, TextAreaField
+from wtforms import StringField, PasswordField, TextAreaField, IntegerField, SelectField
+from wtforms.fields.html5 import DateTimeLocalField, DateField
 from wtforms.validators import InputRequired, Email, Length, EqualTo
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -43,6 +44,33 @@ class Announcements(UserMixin, db.Model):
     body = db.Column(db.Text, nullable=False)
     postedBy = db.Column(db.String(50), nullable=False)
 
+class Flights(UserMixin, db.Model):
+    fid = db.Column(db.String(6), primary_key=True)
+    src = db.Column(db.String(200), nullable=False)
+    dest = db.Column(db.String(200), nullable=False)
+    arrtime = db.Column(db.DateTime, nullable=False)
+    deptime = db.Column(db.DateTime, nullable=False)
+    tzone = db.Column(db.String(10), nullable=False)
+    eprice = db.Column(db.Integer, nullable=False)
+    bprice = db.Column(db.Integer, nullable=False)
+    seats = db.Column(db.Integer, nullable=False)
+    airline = db.Column(db.String(50), nullable=False)
+
+class Passenger(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    mob = db.Column(db.String(10), nullable=False)
+    age = db.Column(db.Integer, nullable = False)
+    gender = db.Column(db.String(1), nullable=False)
+    idDoc = db.Column(db.String(20), nullable=False)
+    typ = db.Column(db.String(20), nullable=False)
+
+class Booking(UserMixin, db.Model):
+    bookid = db.Column(db.Integer, primary_key=True)
+    bdate = db.Column(db.DateTime, default = datetime.utcnow)
+    fid = db.Column(db.String(6))
+    uid = db.Column(db.Integer)
+    clss = db.Column(db.String(10))
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -72,6 +100,36 @@ class AddStaff(FlaskForm):
 
 class AnnouncementForm(FlaskForm):
     body = TextAreaField('Announcement', validators=[InputRequired(), Length(max=10000)], render_kw={"placeholder": "Make Announcement"})
+
+class AddFlights(FlaskForm):
+    fid = StringField('Flight ID', validators=[InputRequired(), Length(min=6, max=6)], render_kw={"placeholder": "Flight ID"})
+    src = StringField('Source', validators=[InputRequired(), Length(max=200)], render_kw={"placeholder": "Source Airport"})
+    dest = StringField('Destination', validators=[InputRequired(), Length(max=200)], render_kw={"placeholder": "Destination Airport"})
+    arrtime = DateTimeLocalField('arrtime', format='%Y-%m-%dT%H:%M')
+    deptime = DateTimeLocalField('deptime', format='%Y-%m-%dT%H:%M')
+    tzone = StringField('Timezone', validators=[InputRequired(), Length(max=10)], render_kw={"placeholder": "Timezone"})
+    eprice = IntegerField('EclassPrice', validators=[InputRequired()], render_kw={"placeholder": "Ticket price"})
+    bprice = IntegerField('BclassPrice', validators=[InputRequired()], render_kw={"placeholder": "Ticket price"})
+    seats = IntegerField('seats', validators=[InputRequired()], render_kw={"placeholder": "Numbers of Seats"})
+    airline = StringField('Airline', validators=[InputRequired(), Length(max=50)], render_kw={"placeholder": "Airline"})
+
+class SearchFlights(FlaskForm):
+    fid = StringField('Flight ID', validators=[Length(min=6, max=6)], render_kw={"placeholder": "Flight ID"})
+    tdate = DateField('tdate', format='%Y-%m-%d')
+    src = SelectField('src' ,choices=[])
+    dest = SelectField('dest' ,choices=[])
+
+class BookFlights(FlaskForm):
+    fid = StringField('fid', render_kw={'readonly':True})
+    fname = StringField('fname', render_kw={'readonly':True})
+    tdate = StringField('fid', render_kw={'readonly':True})
+    mob = StringField('mobile', validators=[InputRequired(), Length(min=10,max=10)], render_kw={"placeholder": "Mobile No."})
+    age = StringField('age', validators=[InputRequired(), Length(min=1,max=3)], render_kw={"placeholder": "Mobile No."})
+    gen = SelectField('Gender', choices=[('M','Male'), ('F','Female')])
+    clss = SelectField('Class', choices=[('E','Economy'), ('B','Business')])
+    price = StringField('prc', render_kw={'readonly':True})
+    typ = SelectField('IDtyp', choices=[('aadhar','Aadhar Card'), ('pan','Pan Card'), ('dl','Driving License'), ('voter','Election Commission ID Card')])
+    idDoc = StringField('mobile', validators=[InputRequired(), Length(min=6,max=20)], render_kw={"placeholder": "ID No."})
 
 @app.route('/home')
 def home():
@@ -205,6 +263,31 @@ def delete_ann(empid, id):
     db.session.commit()
     return redirect(url_for('make_announcements', empid=empid))
 
+@app.route('/staff_dashboard/<string:empid>/add_flights', methods=['GET', 'POST'])
+def add_flights(empid):
+    form = AddFlights()
+    if form.validate_on_submit():
+        flight = Flights(fid=form.fid.data, src=form.src.data, dest=form.dest.data, arrtime=form.arrtime.data, deptime=form.deptime.data, tzone=form.tzone.data, eprice=form.eprice.data, bprice=form.bprice.data, seats=form.seats.data, airline=form.airline.data)
+        db.session.add(flight)
+        db.session.commit()
+        flash('Flight added successfully')
+        return redirect(url_for('staff_dashboard', empid=empid))
+
+    return render_template('add_flights.html', form=form, empid=empid)
+
+@app.route('/staff_dashboard/<string:empid>/view_flight', methods=['GET','POST'])
+def view_flight(empid):
+    flights = Flights.query.all()
+
+    return render_template('view_flight.html', empid=empid, flights=flights)
+
+@app.route('/staff_dashboard/<string:empid>/del_flight/<string:fid>')
+def del_flight(empid, fid):
+    flight = Flights.query.get_or_404(fid)
+    db.session.delete(flight)
+    db.session.commit()
+    return redirect(url_for('view_flight', empid=empid))
+
 @app.route('/chpswd/<id>', methods=['GET', 'POST'])
 def change_password(id):
     form = ChangePassword()
@@ -242,6 +325,32 @@ def change_password(id):
                         error = 'Current Password is incorrect. Please try again.'
 
     return render_template('change_password.html', form=form, error=error, id=id)
+
+@app.route('/dashboard/<int:id>/view_flight_user', methods=['GET', 'POST'])
+def view_flight_user(id):
+    flights = Flights.query.all()
+    src = [(i.src,i.src) for i in flights]
+    dest = [(i.dest,i.dest) for i in flights]
+    form = SearchFlights()
+    form.src.choices = src
+    form.dest.choices = dest
+
+    if form.validate_on_submit():
+        pass
+
+    return render_template('view_flight_user.html', id=id, flights=flights, form=form)
+
+@app.route('/dashboard/<int:id>/view_flight_user/<string:fid>/book_flights', methods=['GET', 'POST'])
+def book_flights(id,fid):
+    user = User.query.get_or_404(id)
+    flight = Flights.query.get_or_404(fid)
+    form = BookFlights()
+
+    if form.validate_on_submit():
+        pass
+
+    return render_template('booking.html' , form=form, user=user, flight=flight)
+    
 
 @app.route('/logout')
 @login_required
