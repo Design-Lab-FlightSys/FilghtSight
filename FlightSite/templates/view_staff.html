@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <title>FlightSite</title>
+  <link rel='icon' href="{{ url_for('static', filename='img/FS.png') }}" type="image/x-icon">
+{% endblock %}
+
+{% block log_buttons %}
+<form class="pull-right">
+  <a class="btn btn-outline-info" href="{{ url_for('admin_dashboard', eid=eid) }}">Dashboard</a>
+  &nbsp;
+  <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#logoutModal">
+    Log Out
+  </button>
+
+  <!-- Modal for Logout -->
+  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="logoutModalLabel">Log Out</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Do you really want to logout?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <a class="btn btn-primary" href="{{ url_for('ulogout') }}">Log Out</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock %}
+
+{% block body %}
+  <p>
+    <h2 style="text-align: center;">FlightSite Employees</h2>
+      <div  style="margin-left: 10%; margin-right: 10%;">
+        <table class="table">
+          <thead class="thead-dark">
+            <tr>
+              
+              <th scope="col">Emp ID</th>
+              <th scope="col">Full Name</th>
+              <th scope="col">Username</th>
+              <th scope="col">Email Id</th>
+              <th scope="col">Delete Employee</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for s in staff %}  
+              <tr>
+                <th scope="row">{{s.empid}}</th>
+                <td>{{s.name}}</td>
+                <td>{{s.username}}</td>
+                <td>{{s.email}}</td>
+                <td><a class="btn btn-danger" href="{{ url_for('delete_staff', empid=s.empid, eid=eid) }}">Delete</a></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+  </p>
+  <br> <br> <br>          
+{% endblock %}

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link type="text/css" rel="stylesheet" href="../static/css/style.css">
+
+    <title>FlightSite</title>
+    <link rel='icon' href='../static/img/FS.png' type="image/x-icon">
+</head>
+
+<body>
+
+    <a class="btn btn-dark" href="home"><< Back to Home</a>
+    <div class="login-reg-panel">
+        <div class="login-info-box">
+            <h2>Have an account?</h2>
+            <p>Just Login with your Credentials!</p>
+            <label id="label-register" for="log-reg-show">Login</label>
+            <input type="radio" name="active-log-panel" id="log-reg-show" checked="checked">
+        </div>
+
+        <div class="register-info-box">
+            <h2>Don't have an account?</h2>
+            <p>Sign up with us and Explore!</p>
+            <label id="label-login"><a href="register">Sign Up</a></label>
+            <input type="radio" name="active-log-panel" id="log-login-show">
+        </div>
+
+        <div class="white-panel">
+            <div class="login-show">
+                <h2>LOGIN</h2>
+                <p>
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            {% for m in messages %}
+                                <div class="alert alert-success" role="alert">
+                                    {{ m }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                </p>
+                <form method="POST" action="/login">
+                    {{ form.hidden_tag() }}
+                    {{ form.username(class_="text") }}
+                    {{ form.password(class_="password") }}
+                    <input type="submit" value="Login">
+                    <a href="">Forgot password?</a>
+                </form>
+                {% if error %}
+                    <p class="error" style="color:red;"><strong>Error:</strong> {{ error }} </p>
+                {% endif %}
+            </div>
+            <div class="register-show">
+                <h2>SIGN UP</h2>
+
+            </div>
+        </div>
+    </div>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="../static/js/login.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <title>FlightSite</title>
+  <link rel='icon' href="{{ url_for('static', filename='img/FS.png') }}" type="image/x-icon">
+{% endblock %}
+
+{% block log_buttons %}
+<form class="pull-right">
+  <a class="btn btn-outline-info" href="{{ url_for('staff_dashboard', empid=empid) }}">Dashboard</a>
+  &nbsp;
+  <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#logoutModal">
+    Log Out
+  </button>
+
+  <!-- Modal for Logout -->
+  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="logoutModalLabel">Log Out</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Do you really want to logout?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <a class="btn btn-primary" href="{{ url_for('ulogout') }}">Log Out</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock %}
+
+{% block body %}
+
+<p>
+  <h2 style="text-align: center;">Available Flights</h2>
+    <div  style="margin-left: 5%; margin-right: 5%;">
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            
+            <th scope="col">Flight Id</th>
+            <th scope="col">Airline</th>
+            <th scope="col">Source</th>
+            <th scope="col">Destination</th>
+            <th scope="col">Departure Date & Time</th>
+            <th scope="col">Destination Date & Time</th>
+            <th scope="col">Local Time Zone</th>
+            <th scope="col">Economy Class Price</th>
+            <th scope="col">Business Class Price</th>
+            <th scope="col">Total Seats Available</th>
+            <th scope="col">Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for f in flights %}  
+            <tr>
+              <th scope="row">{{f.fid}}</th>
+              <td>{{f.airline}}</td>
+              <td>{{f.src}}</td>
+              <td>{{f.dest}}</td>
+              <td>{{f.arrtime}}</td>
+              <td>{{f.deptime}}</td>
+              <td>{{f.tzone}}(UTC)</td>
+              <td>Rs. {{f.eprice}}/-</td>
+              {% if f.bprice %}
+              <td>Rs. {{f.bprice}}/-</td>
+              {% else %}
+              <td>NA</td>
+              {% endif %}
+              <td>{{f.seats}}</td>
+              <td><a class="btn btn-danger" href="{{ url_for('del_flight', empid=empid, fid=f.fid) }}">Delete</a></td>
+            </tr>
+          {% endfor %}
+      </table>
+    </div>
+</p>
+            
+{% endblock %}

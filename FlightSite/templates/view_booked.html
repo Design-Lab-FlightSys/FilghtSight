@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <title>FlightSite</title>
+  <link rel='icon' href="{{ url_for('static', filename='img/FS.png') }}" type="image/x-icon">
+{% endblock %}
+
+{% block log_buttons %}
+<form class="pull-right">
+  <a class="btn btn-outline-info" href="{{ url_for('dashboard', id=user.id) }}">Dashboard</a>
+  &nbsp;
+  <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#logoutModal">
+    Log Out
+  </button>
+
+  <!-- Modal for Logout -->
+  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="logoutModalLabel">Log Out</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Do you really want to logout?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <a class="btn btn-primary" href="{{ url_for('logout') }}">Log Out</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock %}
+
+{% block body %}
+	<br>
+  <h2 style="text-align: center;">Your Booked Flights</h2>
+    <div  style="margin-left: 2%; margin-right: 2%;">
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Booking Id</th>
+            <th scope="col">Flight Id</th>
+            <th scope="col">Airline</th>
+            <th scope="col">Source</th>
+            <th scope="col">Destination</th>
+            <th scope="col">Travel Date & Time</th>
+            <th scope="col">Destination Date & Time</th>
+            <th scope="col">Class</th>
+            <th scope="col">Amount paid</th>
+            <th scope="col">Booking Time</th>
+            <th scope="col">Name</th>
+            <th scope="col">Cancel Booking</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for b in booking %}  
+            <tr>
+	              <th scope="row">{{b.bookid}}</th>
+	              <td>{{b.fid}}</td>
+	              <td>{{b.airline}}</td>
+	              <td>{{b.src}}</td>
+	              <td>{{b.dest}}</td>
+	              <td>{{b.tdate}}</td>
+	              <td>{{b.ddate}}</td>
+	              <td>{{b.clss}}</td>
+	              <td>Rs. {{b.price}}/-</td>
+	              <td>{{b.bdate.day}}/{{b.bdate.month}}/{{b.bdate.year}}   {{(b.bdate.hour+5)%24}}:{{(b.bdate.minute+30)%60}}(IST)</td>
+	              <td>{{user.name}}</td>
+	              <td><a class="btn btn-danger" href="{{ url_for('cancel_booking', id=b.uid, bid=b.bookid) }}">Cancel</a></td>
+            </tr>
+          {% endfor %}
+      </table>
+    </div>
+</p>
+<br><br><br><br>            
+{% endblock %}
