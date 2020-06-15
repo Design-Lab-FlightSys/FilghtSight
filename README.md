@@ -1,2 +1,2 @@
-# FilghtSite (Under Construction!)
+# FilghtSite
 An Online Flight Reservation cum Passenger Management System Built using Flask Web Framework
