@@ -43,6 +43,9 @@
                     {{ form.conf_password(class_="password") }}
                     <input type="submit" value="Sign Up">
                 </form>
+                {% if usernameCheck %}
+                    <p class="error" style="color:red;"> {{ usernameCheck }} </p>
+                {% endif %}
             </div>
         </div>
     </div>

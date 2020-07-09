@@ -181,15 +181,22 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
+    usernameCheck=None
     if form.validate_on_submit():
-        hashed_password = generate_password_hash(form.password.data, method='sha256')
-        new_user = User(name=form.name.data, username=form.username.data, email=form.email.data, pswd=hashed_password)
-        db.session.add(new_user)
-        db.session.commit()
-        flash('Sucessfully Signed Up! Please login to proceed.')
-        return redirect(url_for('login'))
+        l=User.query.all()
+        unames=[i.username for i in l]
+        emails=[i.email for i in l]
+        if form.username.data not in unames and form.email.data not in emails:
+            hashed_password = generate_password_hash(form.password.data, method='sha256')
+            new_user = User(name=form.name.data, username=form.username.data, email=form.email.data, pswd=hashed_password)
+            db.session.add(new_user)
+            db.session.commit()
+            flash('Sucessfully Signed Up! Please login to proceed.')
+            return redirect(url_for('login'))
+        else:
+            usernameCheck='Username and/or email already exists,please try a different one!'
 
-    return render_template('register.html', form=form)
+    return render_template('register.html', form=form, usernameCheck=usernameCheck)
 
 @app.route('/dashboard/<int:id>')
 @login_required
@@ -338,7 +345,9 @@ def change_password(id):
 def view_flight_user(id):
     flights = Flights.query.all()
     src = [(i.src,i.src) for i in flights]
+    src=list(set(src))
     dest = [(i.dest,i.dest) for i in flights]
+    dest=list(set(dest))
     form = SearchFlights()
     form.src.choices = src
     form.dest.choices = dest
